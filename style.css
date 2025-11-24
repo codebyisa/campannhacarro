@@ -1,0 +1,868 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.header {
+    width: 100%;
+    padding: 20px 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    z-index: 10;
+    background: transparent;
+}
+
+.header-logo {
+    height: 70px;
+    max-width: 80%;
+}
+
+
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+
+    padding: 100px 60px 80px 60px;
+
+    background: url("https://portal.2easyinsurance.com/wp-content/uploads/2025/07/banner-home-seguro-autos.jpg")
+                no-repeat center right;
+    background-size: cover;
+
+    position: relative;
+}
+
+.hero-content {
+    max-width: 520px;
+    color: white;
+    z-index: 2;
+    margin-top: 40px;
+}
+
+.tag {
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+.tag span {
+    color: #46cf8a;
+}
+
+.hero h1 {
+    font-size: 46px;
+    line-height: 1.2;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.sub-text {
+    color: #d9d9ff;
+    text-decoration: underline;
+    font-size: 18px;
+}
+
+.description {
+    margin: 25px 0;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+.cta {
+    background: #46cf8a;
+    color: white;
+    border: none;
+    padding: 18px 32px;
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: 0.3s ease;
+}
+
+.cta:hover {
+    background: #39a873;
+}
+
+
+@media (max-width: 1200px) {
+    .hero {
+        padding: 100px 40px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+}
+
+
+@media (max-width: 900px) {
+
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 120px 30px 60px 30px;
+        background-position: center;
+    }
+
+    .hero-empty {
+        display: none;
+    }
+
+    .hero-content {
+        margin: 40px auto 0 auto;
+        max-width: 90%;
+    }
+
+    .header-logo {
+        height: 60px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .tag {
+        font-size: 20px;
+    }
+
+    .sub-text {
+        font-size: 17px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+
+    .cta {
+        padding: 16px 28px;
+        font-size: 18px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 140px 25px 40px 25px;
+    }
+
+    .header-logo {
+        height: 50px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .tag {
+        font-size: 18px;
+    }
+
+    .description {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .hero {
+        padding: 150px 20px 40px 20px;
+    }
+
+    .hero-content {
+        margin-top: 20px;
+    }
+
+    .header-logo {
+        height: 45px;
+    }
+
+    .tag {
+        font-size: 16px;
+    }
+
+    .hero h1 {
+        font-size: 26px;
+    }
+
+    .sub-text {
+        font-size: 15px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .cta {
+        padding: 14px 24px;
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 330px) {
+
+    .hero h1 {
+        font-size: 22px;
+    }
+
+    .header-logo {
+        height: 40px;
+    }
+
+    .cta {
+        font-size: 15px;
+        padding: 12px 20px;
+    }
+}
+
+.porque-section {
+    width: 100%;
+    padding: 60px 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.porque-container {
+    max-width: 1300px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+    gap: 60px;
+}
+
+.porque-image img {
+    width: 100%;
+    border-radius: 25px;
+    display: block;
+}
+
+.porque-content h2 {
+    font-size: 34px;
+    color: #4b2fad;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.checklist {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.checklist li {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+.cta2 {
+    background: #46cf8a;
+    color: white;
+    border: none;
+    padding: 18px 36px;
+    border-radius: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: 0.3s ease;
+}
+
+.cta2:hover {
+    background: #39a873;
+}
+
+@media (max-width: 1000px) {
+    .porque-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .porque-content h2 {
+        font-size: 28px;
+    }
+
+    .checklist li {
+        font-size: 16px;
+    }
+
+    .cta2 {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 500px) {
+    .porque-section {
+        padding: 40px 20px;
+    }
+
+    .porque-content h2 {
+        font-size: 24px;
+    }
+
+    .checklist li {
+        font-size: 15px;
+    }
+}
+
+.calc-section {
+    width: 100%;
+    background: url("https://portal.2easyinsurance.com/wp-content/uploads/2025/07/bg-calculadora.jpg")
+                no-repeat center top;
+    background-size: cover;
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.calc-container {
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.calc-right {
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(10px);
+    padding: 40px 34px;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.22);
+}
+
+.calc-title {
+    font-size: 42px;
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.calc-subtitle {
+    font-size: 18px;
+    text-align: center;
+    color: #e4e4ff;
+    margin-bottom: 35px;
+}
+
+.calc-form-container {
+    width: 100%;
+}
+
+.form-step {
+    display: none;
+}
+.form-step.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 13px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(6, 193, 103, 0.3);
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.checkbox-group label {
+    color: #fff;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+.add-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #9fffd5;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.add-link:hover {
+    opacity: 0.7;
+}
+
+button[type="button"],
+button[type="submit"] {
+    padding: 14px 24px;
+    background: #46cf8a;
+    border: none;
+    color: #fff;
+    font-size: 1.05rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+button[type="button"]:hover,
+button[type="submit"]:hover {
+    background: #049e55;
+}
+
+button[type="button"]:first-child {
+    background: rgba(255,255,255,0.25);
+}
+button[type="button"]:first-child:hover {
+    background: rgba(255,255,255,0.4);
+}
+
+.summary {
+    background: rgba(255,255,255,0.9);
+    padding: 15px 18px;
+    border-radius: 10px;
+}
+
+@media (max-width: 950px) {
+
+    .calc-section {
+        padding: 70px 20px;
+    }
+
+    .calc-title {
+        font-size: 32px;
+    }
+
+    .calc-right {
+        margin-top: 0;
+        padding: 32px 26px;
+    }
+
+    button[type="button"],
+    button[type="submit"] {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+.faq {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.faq-title {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 700;
+  color: #480d96;
+  margin-bottom: 30px;
+}
+
+.faq-item {
+  border: 1px solid #ece9f1;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.faq-item input {
+  display: none;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #380c72;
+}
+
+.faq-question .icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #47138a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  position: relative;
+}
+
+.faq-question .icon::before {
+  content: "+";
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.faq-item input:checked + .faq-question .icon::before {
+  content: "−";
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 24px;
+  line-height: 1.6;
+  font-size: 16px;
+  color: #392b42;
+  transition: max-height 0.4s ease;
+}
+
+.faq-item input:checked ~ .faq-answer {
+  padding: 18px 24px 24px;
+  max-height: 700px;
+}
+
+
+
+/**/
+
+.cta-section {
+  width: 100%;
+  height: 500px;
+  background-image: url("https://portal.2easyinsurance.com/wp-content/uploads/2025/07/insurance-agent-working-site-car-accident-claim-process-people-car-insurance-claim-scaled.jpg"); 
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding-left: 120px;
+  position: relative;
+}
+
+.cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #2c1852e1; 
+}
+
+.cta-content {
+  position: relative;
+  max-width: 850px;
+}
+
+.cta-section h2 {
+  font-size: 28px;
+  line-height: 1.3;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.green {
+  color: #46cf8a;
+  font-weight: 800;
+}
+
+.cta-btn {
+  display: inline-block;
+  background: #46cf8a;
+  color: white;
+  padding: 18px 40px;
+  margin-top: 30px;
+  border-radius: 40px;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.cta-btn:hover {
+  background: #2fa257;
+}
+
+
+.cta-grid {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.cta-left {
+  flex: 1;
+}
+
+
+.cta-right {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .cta-grid {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cta-right {
+    margin-top: 20px;
+  }
+}
+
+
+
+.footer {
+  background: #ffffff;
+  padding: 60px 80px 30px;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center;
+  gap: 60px; 
+}
+
+
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  flex: 1; 
+}
+
+
+.footer-logo {
+  height: 95px;
+}
+
+
+
+.footer-contact p {
+  margin: 4px 0;
+  font-size: 17px;
+  color: #2c1852;
+  font-weight: 600;
+}
+
+.footer-contact a {
+  color: #2c1852;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.footer-contact a:hover {
+  color: #47cc8c; 
+}
+
+.icon {
+  color: #2c1852;
+  margin-right: 6px;
+  font-size: 18px;
+}
+
+.footer-social {
+  margin-top: 20px;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 14px;
+  background: transparent;
+  color: #4e1b73;
+  font-size: 24px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.social-icon:hover {
+  color: #47cc8c; 
+}
+
+.footer-divider {
+  width: 100%;
+  height: 1px;
+  background: #9be2b2;
+  margin: 30px auto 10px;
+}
+
+
+.footer-copy {
+  text-align: center;
+  font-size: 15px;
+  color: #555;
+}
+
+@media (max-width: 1024px) {
+
+  .cta-section {
+    padding-left: 60px;
+    height: auto;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .cta-section h2 {
+    font-size: 32px;
+  }
+
+  .cta-btn {
+    font-size: 18px;
+    padding: 16px 32px;
+  }
+
+  .footer {
+    padding: 50px 40px 25px;
+  }
+
+  .footer-container {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .cta-section {
+    padding-left: 30px;
+    padding-right: 30px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cta-content {
+    max-width: 100%;
+  }
+
+  .cta-section h2 {
+    font-size: 30px;
+  }
+
+  .cta-btn {
+    margin-top: 25px;
+    font-size: 18px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-logo {
+    height: 80px;
+    margin-bottom: 20px;
+  }
+
+  .footer-right {
+    align-items: center;
+  }
+
+  .social-icon {
+    margin-right: 10px;
+  }
+
+  .footer {
+    padding: 50px 20px 25px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .cta-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 26px;
+    line-height: 1.25;
+  }
+
+  .cta-btn {
+    width: 100%;
+    font-size: 18px;
+    padding: 16px 0;
+    border-radius: 35px;
+  }
+
+  .footer-logo {
+    height: 70px;
+  }
+
+  .footer-contact p,
+  .footer-contact a {
+    font-size: 15px;
+  }
+
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    margin-right: 10px;
+  }
+
+  .footer-copy {
+    font-size: 14px;
+  }
+}
