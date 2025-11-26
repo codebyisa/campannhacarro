@@ -20,6 +20,25 @@ a {
     color: white;
 }
 
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* espaço entre os itens */
+  flex-wrap: wrap; /* caso no mobile precise quebrar */
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* espaço entre radio e texto */
+  cursor: pointer;
+  white-space: nowrap; /* impede quebrar no desktop */
+}
+
+.checkbox-group input[type="radio"] {
+  margin: 0; /* alinha perfeitamente */
+}
+
 .header {
     width: 100%;
     padding: 20px 0;
