@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(){
   // TELEFONE - BANDEIRINHA E MÁSCARA
   const phoneInput = document.querySelector('input[name="phone"]');
+  let itiInstance = null;
   if (phoneInput) {
     const iti = window.intlTelInput(phoneInput, {
       initialCountry: "us",
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function(){
       formatOnDisplay: true,
       utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
     });
+    itiInstance = iti;
 
     function applyPhoneMask() {
       var country = iti.getSelectedCountryData().iso2;
@@ -235,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function(){
       saveMakesCache(names);
       populateMakes(names);
     } catch (e) {
-      // tenta cache expirado
       const expired = loadMakesCache(MAX_AGE, true);
       if (expired && expired.length) {
         populateMakes(expired);
@@ -334,18 +335,41 @@ document.addEventListener("DOMContentLoaded", function(){
           radios[0].focus();
           return false;
         }
-      } else if (!input.value.trim()) {
-        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('form-error')) {
-          let error = document.createElement("div");
-          error.className = "form-error";
-          error.style.color = "#E53935";
-          error.style.fontSize = "0.97em";
-          error.style.marginTop = "2px";
-          error.innerText = "Por favor, preencha este campo.";
-          input.parentNode.appendChild(error);
+      } else {
+        const value = input.value.trim();
+
+        if (!value) {
+          if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('form-error')) {
+            let error = document.createElement("div");
+            error.className = "form-error";
+            error.style.color = "#E53935";
+            error.style.fontSize = "0.97em";
+            error.style.marginTop = "2px";
+            error.innerText = "Por favor, preencha este campo.";
+            input.parentNode.appendChild(error);
+          }
+          input.focus();
+          return false;
         }
-        input.focus();
-        return false;
+
+        // NOVO: obrigar nome + sobrenome no motorista principal
+        if (input.name === "main_driver_name") {
+          const parts = value.split(/\s+/);
+          if (parts.length < 2) {
+            let error = input.parentNode.querySelector('.form-error');
+            if (!error) {
+              error = document.createElement("div");
+              error.className = "form-error";
+              error.style.color = "#E53935";
+              error.style.fontSize = "0.97em";
+              error.style.marginTop = "2px";
+              input.parentNode.appendChild(error);
+            }
+            error.innerText = "Você deve colocar seu nome e sobrenome.";
+            input.focus();
+            return false;
+          }
+        }
       }
     }
 
@@ -402,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
   }, true);
 
-  // MOTORISTAS ADICIONAIS (mesmo)
+  // MOTORISTAS ADICIONAIS
   window.addAdditionalDriver = function() {
     if (driverCount >= 2) return;
     const box = document.getElementById("additionalDrivers");
@@ -456,7 +480,7 @@ document.addEventListener("DOMContentLoaded", function(){
     driverCount = names.length;
   }
 
-  // VEÍCULOS ADICIONAIS (mesmo)
+  // VEÍCULOS ADICIONAIS
   window.addAdditionalVehicle = function() {
     if (vehicleCount >= 2) return;
     const box = document.getElementById("additionalVehicles");
@@ -546,11 +570,19 @@ document.addEventListener("DOMContentLoaded", function(){
     nextStep();
   }
 
-  // ENVIO FINAL (LARA + CRM) — inclui year/make/model quando não houver VIN
+  // ========= ENVIO FINAL =========
   document.getElementById("autoForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+
+    // botão de submit
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.dataset.originalText = submitBtn.dataset.originalText || submitBtn.textContent;
+      submitBtn.textContent = 'Enviando...';
+    }
 
     function toMMDDYYYY(date) {
       if (!date) return "";
@@ -558,29 +590,48 @@ document.addEventListener("DOMContentLoaded", function(){
       return `${mm}/${dd}/${yyyy}`;
     }
 
-    // DADOS PRINCIPAIS
-    const mainName = (formData.get("main_driver_name") || "").split(" ");
-    const mainFirst = mainName.shift() || "João";
-    const mainLast = mainName.join(" ") || "Silva";
+    // NOME PRINCIPAL (sem João / Silva)
+    const fullNameRaw = (formData.get("main_driver_name") || "").trim();
+    let mainFirst = "";
+    let mainLast = "";
+
+    if (fullNameRaw) {
+      const parts = fullNameRaw.split(/\s+/);
+      mainFirst = parts.shift() || "";
+      mainLast  = parts.join(" ");
+    }
+
+    // E-MAIL E TELEFONE REAIS DO USUÁRIO
+    const userEmail = (formData.get("email") || "").trim();
+    let userPhone  = (formData.get("phone") || "").trim();
+    if (typeof itiInstance !== "undefined" && itiInstance && typeof itiInstance.getNumber === "function") {
+      const fullNumber = itiInstance.getNumber();
+      if (fullNumber) userPhone = fullNumber;
+    }
 
     // DRIVERS
     const drivers = [{
       first_name: mainFirst,
       last_name: mainLast,
-      date_of_birth: toMMDDYYYY(formData.get("main_driver_dob")) || "01/15/1985",
+      date_of_birth: toMMDDYYYY(formData.get("main_driver_dob")),
       gender: "male",
       marital_status: "S",
       relationship: "Self",
       years_licensed: "3"
     }];
+
     const additionalNames = formData.getAll("additional_driver_name[]");
-    const additionalDOBs = formData.getAll("additional_driver_dob[]");
+    const additionalDOBs  = formData.getAll("additional_driver_dob[]");
+
     additionalNames.forEach((name, i) => {
-      if (name) {
-        const n = name.split(" ");
+      const nameTrim = (name || "").trim();
+      if (nameTrim) {
+        const parts = nameTrim.split(/\s+/);
+        const first = parts.shift() || "";
+        const last  = parts.join(" ");
         drivers.push({
-          first_name: n.shift() || "",
-          last_name: n.join(" ") || "",
+          first_name: first,
+          last_name: last,
           date_of_birth: toMMDDYYYY(additionalDOBs[i]),
           gender: "male",
           marital_status: "S",
@@ -595,12 +646,14 @@ document.addEventListener("DOMContentLoaded", function(){
     const vehicles = [];
 
     if (vinMode === "sim") {
-      const mainVIN = formData.get("vehicle_main");
-      if (mainVIN) { vehicles.push({ vin: mainVIN, ownership_status: "financed" }); }
+      const mainVIN = (formData.get("vehicle_main") || "").trim();
+      if (mainVIN) {
+        vehicles.push({ vin: mainVIN, ownership_status: "financed" });
+      }
     } else {
-      const y = formData.get("vehicle_year");
-      const mk = formData.get("vehicle_make");
-      const md = formData.get("vehicle_model");
+      const y  = (formData.get("vehicle_year")  || "").trim();
+      const mk = (formData.get("vehicle_make") || "").trim();
+      const md = (formData.get("vehicle_model")|| "").trim();
       if (y && mk && md) {
         vehicles.push({ year: y, make: mk, model: md, ownership_status: "financed" });
       }
@@ -608,41 +661,35 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // VINs adicionais
     const vinExtras = formData.getAll("additional_vehicle_vin[]");
-    vinExtras.forEach(vin => { if (vin) vehicles.push({ vin, ownership_status: "financed" }); });
+    vinExtras.forEach(vin => {
+      const cleanVin = (vin || "").trim();
+      if (cleanVin) {
+        vehicles.push({ vin: cleanVin, ownership_status: "financed" });
+      }
+    });
 
-    // LARA
+    // LARA PAYLOAD (sem Kamili, sem senha/telefone fixos)
     const laraPayload = {
       personal_info: {
         first_name: mainFirst,
         last_name: mainLast,
-        date_of_birth: toMMDDYYYY(formData.get("main_driver_dob")) || "01/15/1985",
+        date_of_birth: toMMDDYYYY(formData.get("main_driver_dob")),
         marital_status: "S"
       },
       address_info: {
-        address_line1: formData.get("address") || "1689 s. kirkman rd",
+        address_line1: formData.get("address") || "",
         address_line2: "",
-        zipcode: formData.get("zip") || "32811-00000",
+        zipcode: formData.get("zip") || "",
         apartment_type: "apartment",
         rental_status: "rental",
         address_time: "4"
       },
       contact_info: {
-        email: "kamili.santos@2easyinsurance.com",
-        password: "0rlando2025$",
-        cellphone: "(407) 555-1234"
+        email: userEmail,
+        cellphone: userPhone
       },
-      vehicles: vehicles.length ? vehicles : [{ vin: "1HGCM82633A004352", ownership_status: "financed" }],
-      drivers: drivers.length ? drivers : [
-        {
-          first_name: "João",
-          last_name: "Silva",
-          date_of_birth: "01/15/1985",
-          gender: "male",
-          marital_status: "S",
-          relationship: "Self",
-          years_licensed: "3"
-        }
-      ],
+      vehicles: vehicles.length ? vehicles : [],
+      drivers:  drivers.length  ? drivers  : [],
       insurance_info: {
         effective_date: "today",
         credit_check_authorized: "yes",
@@ -664,60 +711,18 @@ document.addEventListener("DOMContentLoaded", function(){
       headless: true
     };
 
-    // CRM
-    const dependents = [];
-    additionalNames.forEach((name, i) => {
-      if (name && additionalDOBs[i]) {
-        const n = name.split(" ");
-        dependents.push({
-          firstname: n.shift() || "",
-          lastname: n.join(" ") || "",
-          birthdate: additionalDOBs[i] || "1985-01-15",
-          gender: "M",
-          type: "other",
-          smoker: 0,
-          american: 0,
-          special_treatment: false
-        });
-      }
-    });
-    const crmPayload = {
-      parameters: {
-        firstname: mainFirst,
-        lastname: mainLast,
-        birthdate: formData.get("main_driver_dob") || "1985-01-15",
-        email: formData.get("email") || "cliente@email.com",
-        phone: formData.get("phone") || "551111111111",
-        address: formData.get("address") || "1689 s. kirkman rd",
-        second_address: "",
-        zipcode: formData.get("zip") || "32811-00000",
-        gender: "M",
-        smoker: 0,
-        american: 0,
-        family_income: 0,
-        social_security: "",
-        language: "portuguese",
-        insurance_type_id: "1006",
-        special_treatment: false,
-        dependents: dependents,
-        tags: [{ tag_name: "Easy API", tag_color: "#6c7983" }]
-      }
-    };
+    // NOVO: URL da página para identificar a origem do formulário
+    const currentUrl = window.location.href;
 
     try {
-      await fetch("https://primary-production-2441.up.railway.app/webhook/217cc570-0486-40a3-acd6-5f699556cca5", {
+      await fetch("https://primary-production-2441.up.railway.app/webhook/217cc570-0486-40a3-acd6-5f699556cca5/lara-selenium", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...laraPayload,
-          user_email: formData.get("email") || "cliente@email.com"
+          user_email: userEmail,
+          page_url: currentUrl
         })
-      });
-
-      await fetch("https://primary-production-2441.up.railway.app/webhook/8dc0b8fc-a3f1-433e-bd16-4cc16e07f452", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(crmPayload)
       });
 
       showSuccessModal();
@@ -732,6 +737,10 @@ document.addEventListener("DOMContentLoaded", function(){
       setTimeout(() => { location.reload(); }, 8000);
     } catch (err) {
       alert("Erro ao enviar dados. Tente novamente!");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.originalText || 'Enviar Cotação';
+      }
     }
   });
 
@@ -791,7 +800,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-
 document.addEventListener("DOMContentLoaded", function() {
   const zipInput = document.getElementById("zip");
   const stateInput = document.getElementById("state");
@@ -838,3 +846,37 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const allIcons = document.querySelectorAll('.help-icon');
+  const allTips  = document.querySelectorAll('.tooltip-pop');
+
+  function closeAllTips() {
+    allIcons.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
+    allTips.forEach(tp => { tp.dataset.open = 'false'; tp.setAttribute('aria-hidden','true'); });
+  }
+
+  allIcons.forEach(btn => {
+    btn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      const tipId = btn.getAttribute('aria-controls');
+      const tip   = document.getElementById(tipId);
+      const isOpen = tip?.dataset.open === 'true';
+
+      closeAllTips();
+      if (!isOpen && tip) {
+        tip.dataset.open = 'true';
+        tip.setAttribute('aria-hidden','false');
+        btn.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+
+  document.addEventListener('click', closeAllTips);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllTips();
+  });
+});
+
